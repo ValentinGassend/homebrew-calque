@@ -1,5 +1,5 @@
 cask "calque" do
-  arch arm: "-arm64", intel: ""
+  arch arm: "-arm64"
 
   version "0.1.0"
   sha256 arm:   "b8eb5c69653ec92c863fac96d1c2696e39e19452b0455b76a65a1752e8b9e470",
@@ -14,7 +14,7 @@ cask "calque" do
     skip "No public version feed yet"
   end
 
-  depends_on macos: ">= :monterey"
+  depends_on macos: :monterey
 
   app "Calque.app"
 
