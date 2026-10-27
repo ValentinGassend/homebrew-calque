@@ -14,7 +14,7 @@ cask "calque" do
     skip "No public version feed yet"
   end
 
-  depends_on macos: :monterey
+  depends_on macos: :ventura
 
   app "Calque.app"
 

@@ -1,6 +1,6 @@
 # Calque pour Homebrew
 
-[Calque](https://calque.valentingassend.com/) garde tout ce que tu copies et cherche en même temps dans tous tes drives installés. Ce dépôt est le « tap » Homebrew qui l'installe sur Mac (Apple Silicon et Intel, macOS 12 ou plus récent).
+[Calque](https://calque.valentingassend.com/) garde tout ce que tu copies et cherche en même temps dans tous tes drives installés. Ce dépôt est le « tap » Homebrew qui l'installe sur Mac (Apple Silicon et Intel, macOS 13 Ventura ou plus récent).
 
 ```sh
 brew install --cask valentingassend/calque/calque
@@ -36,7 +36,7 @@ Installer par Homebrew ne change rien à ce qui est gratuit ou payant. Calque Pr
 
 ## Calque for Homebrew (English)
 
-Calque keeps everything you copy and searches all your installed drives at once. This tap installs it on Mac (Apple Silicon and Intel, macOS 12 or later).
+Calque keeps everything you copy and searches all your installed drives at once. This tap installs it on Mac (Apple Silicon and Intel, macOS 13 Ventura or later).
 
 ```sh
 brew install --cask valentingassend/calque/calque

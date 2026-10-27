@@ -47,10 +47,10 @@ jobs:
           bundle_id=$(/usr/libexec/PlistBuddy -c "Print CFBundleIdentifier" "$plist")
           test "$bundle_id" = "com.valentingassend.calque"
 
-          # La formule déclare macOS 12 (Monterey) au minimum : l'app ne doit pas en demander plus
+          # La formule déclare macOS 13 (Ventura) au minimum : l'app ne doit pas en demander plus
           min=$(/usr/libexec/PlistBuddy -c "Print LSMinimumSystemVersion" "$plist")
           echo "LSMinimumSystemVersion $min"
-          test "${min%%.*}" -le 12
+          test "${min%%.*}" -le 13
 
           # La bonne architecture pour ce Mac
           archs=$(lipo -archs "$APP/Contents/MacOS/Calque")
