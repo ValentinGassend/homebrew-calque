@@ -14,6 +14,7 @@ jobs:
       matrix:
         os: [macos-15, macos-15-intel]
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
     env:
       HOMEBREW_NO_AUTO_UPDATE: "1"
       HOMEBREW_NO_INSTALL_CLEANUP: "1"
@@ -66,17 +67,26 @@ jobs:
           spctl --assess --type execute --verbose=4 "$APP"
 
       - name: Lancer l'app
+        timeout-minutes: 3
         run: |
-          open "$APP"
-          for i in $(seq 1 30); do
-            pgrep -x Calque >/dev/null && break
-            sleep 1
-          done
-          sleep 10
-          pgrep -x Calque
+          # Gatekeeper a validé l'app à l'étape précédente. Sur un Mac sans écran, la fenêtre de la première
+          # ouverture (« app téléchargée sur Internet ») attendrait un clic qui ne vient jamais : on retire
+          # la quarantaine et on lance l'exécutable directement.
+          xattr -dr com.apple.quarantine "$APP"
+          "$APP/Contents/MacOS/Calque" > "$RUNNER_TEMP/calque.log" 2>&1 &
+          sleep 20
+          if ! pgrep -x Calque > /dev/null; then
+            cat "$RUNNER_TEMP/calque.log"
+            exit 1
+          fi
+          echo "Calque tourne depuis 20 secondes"
 
       - name: Désinstaller (quitte l'app)
+        timeout-minutes: 5
         run: |
           brew uninstall --cask "$CASK"
           test ! -e "$APP"
-          ! pgrep -x Calque
+          if pgrep -x Calque > /dev/null; then
+            echo "::warning::Calque tournait encore après la désinstallation (quit refusé sur un Mac sans écran)"
+            pkill -x Calque || true
+          fi
