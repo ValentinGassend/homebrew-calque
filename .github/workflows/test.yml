@@ -1,0 +1,82 @@
+# Installe la formule sur un Mac Apple Silicon et un Mac Intel, comme un utilisateur, puis vérifie que l'app
+# installée est bien celle de la formule : version, signature Developer ID, notarisation, architecture, lancement.
+name: Test
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  install:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-15, macos-15-intel]
+    runs-on: ${{ matrix.os }}
+    env:
+      HOMEBREW_NO_AUTO_UPDATE: "1"
+      HOMEBREW_NO_INSTALL_CLEANUP: "1"
+      CASK: valentingassend/calque/calque
+      APP: /Applications/Calque.app
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Ajouter ce tap tel qu'il est dans ce commit
+        run: brew tap valentingassend/calque "$GITHUB_WORKSPACE"
+
+      - name: Style et audit
+        run: |
+          brew style --cask "$CASK"
+          brew audit --cask --online --strict "$CASK"
+
+      - name: Installer
+        run: brew install --cask "$CASK"
+
+      - name: Vérifier l'app installée
+        run: |
+          set -euo pipefail
+          plist="$APP/Contents/Info.plist"
+          cask_version=$(brew info --cask --json=v2 "$CASK" | ruby -rjson -e 'puts JSON.parse($stdin.read)["casks"][0]["version"]')
+          app_version=$(/usr/libexec/PlistBuddy -c "Print CFBundleShortVersionString" "$plist")
+          echo "Formule $cask_version, app $app_version"
+          test "$app_version" = "$cask_version"
+
+          bundle_id=$(/usr/libexec/PlistBuddy -c "Print CFBundleIdentifier" "$plist")
+          test "$bundle_id" = "com.valentingassend.calque"
+
+          # La formule déclare macOS 12 (Monterey) au minimum : l'app ne doit pas en demander plus
+          min=$(/usr/libexec/PlistBuddy -c "Print LSMinimumSystemVersion" "$plist")
+          echo "LSMinimumSystemVersion $min"
+          test "${min%%.*}" -le 12
+
+          # La bonne architecture pour ce Mac
+          archs=$(lipo -archs "$APP/Contents/MacOS/Calque")
+          echo "Architectures $archs, machine $(uname -m)"
+          case "$(uname -m)" in
+            arm64) [[ "$archs" == *arm64* ]] ;;
+            x86_64) [[ "$archs" == *x86_64* ]] ;;
+          esac
+
+          # Signée Developer ID et notarisée : Gatekeeper l'accepte telle que Homebrew l'a posée (en quarantaine)
+          codesign --verify --deep --strict --verbose=2 "$APP"
+          codesign -dv --verbose=2 "$APP" 2>&1 | grep -E "^(Authority|TeamIdentifier)="
+          spctl --assess --type execute --verbose=4 "$APP"
+
+      - name: Lancer l'app
+        run: |
+          open "$APP"
+          for i in $(seq 1 30); do
+            pgrep -x Calque >/dev/null && break
+            sleep 1
+          done
+          sleep 10
+          pgrep -x Calque
+
+      - name: Désinstaller (quitte l'app)
+        run: |
+          brew uninstall --cask "$CASK"
+          test ! -e "$APP"
+          ! pgrep -x Calque
