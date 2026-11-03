@@ -26,7 +26,11 @@ jobs:
           fetch-depth: 0
 
       - name: Ajouter ce tap tel qu'il est dans ce commit
-        run: brew tap valentingassend/calque "$GITHUB_WORKSPACE"
+        run: |
+          brew tap valentingassend/calque "$GITHUB_WORKSPACE"
+          # Depuis Homebrew 6, un tap tiers n'est chargé qu'une fois déclaré fiable. Un utilisateur qui tape le nom
+          # complet (brew install --cask valentingassend/calque/calque) le fait sans le savoir ; ici, il faut le dire.
+          if brew commands --quiet | grep -qx trust; then brew trust --cask "$CASK"; fi
 
       - name: Style et audit
         run: |
