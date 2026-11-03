@@ -1,6 +1,8 @@
 # Calque pour Homebrew
 
-[Calque](https://calque.valentingassend.com/) garde tout ce que tu copies et cherche en même temps dans tous tes drives installés. Ce dépôt est le « tap » Homebrew qui l'installe sur Mac (Apple Silicon et Intel, macOS 13 Ventura ou plus récent).
+[Calque](https://calque.valentingassend.com/?utm_source=github) est une app pour Windows et Mac, éditée en France par Valentin Gassend, qui remplace l'historique du presse-papier (Win+V, ⇧⌘V) et cherche dans les fichiers de tes drives installés (Google Drive, OneDrive, Dropbox, iCloud Drive, kDrive), même restés en ligne. Historique chiffré, sans compte, rien n'est envoyé.
+
+Ce dépôt est le « tap » Homebrew qui l'installe sur Mac (Apple Silicon et Intel, macOS 13 Ventura ou plus récent).
 
 ```sh
 brew install --cask valentingassend/calque/calque
@@ -36,7 +38,9 @@ Installer par Homebrew ne change rien à ce qui est gratuit ou payant. Calque Pr
 
 ## Calque for Homebrew (English)
 
-Calque keeps everything you copy and searches all your installed drives at once. This tap installs it on Mac (Apple Silicon and Intel, macOS 13 Ventura or later).
+[Calque](https://calque.valentingassend.com/en.html?utm_source=github) is a Windows and Mac app, made in France by Valentin Gassend, that replaces clipboard history (Win+V, ⇧⌘V) and searches the files in your installed cloud drives (Google Drive, OneDrive, Dropbox, iCloud Drive, kDrive), including online-only files. Encrypted history, no account, nothing sent.
+
+This tap installs it on Mac (Apple Silicon and Intel, macOS 13 Ventura or later).
 
 ```sh
 brew install --cask valentingassend/calque/calque
