@@ -1,9 +1,9 @@
 cask "calque" do
   arch arm: "-arm64"
 
-  version "0.1.1"
-  sha256 arm:   "789aa07b13750450365b10544f31aec10e79b28517a57a8e649cb760c78fff12",
-         intel: "eb04cd8f0dadb331653d0ef85ecc32d429257ed7cdbf89c3db0659f7a424fb58"
+  version "0.1.2"
+  sha256 arm:   "1fec09208b4f6b469d41e6127b9c5a2687acb7ccc7541ff4151b04dc60936142",
+         intel: "2e7cac26b1575da9344b44455d7a173b2b16fa05d3c3d852be557c45959a36c6"
 
   url "https://calque.valentingassend.com/telechargements/Calque-#{version}#{arch}.dmg"
   name "Calque"
